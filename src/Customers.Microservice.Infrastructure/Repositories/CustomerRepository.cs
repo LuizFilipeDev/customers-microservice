@@ -20,27 +20,27 @@ namespace Customers.Microservice.Infrastructure.Repositories
         {
             //Open your connection using Context folder or consume external services using External folder and execute your actions.
 
-            return _customerInMemory.customers;
+            return _customerInMemory.Customers;
         }
 
         public ICustomer SelectById(int id)
         {
             //Open your connection using Context folder or consume external services using External folder and execute your actions.
-            return _customerInMemory?.customers?.Find(x => x.Id == id) ?? new Customer();
+            return _customerInMemory?.Customers?.Find(x => x.Id == id) ?? new Customer();
         }
 
         public int Insert(ICustomer customer)
         {
             //Open your connection using Context folder or consume external services using External folder and execute your actions.
-            int newId = _customerInMemory.customers.Count() + 1;
-            _customerInMemory.customers.Add(new Customer{ Id = newId, Name = customer.Name});
-            return newId;
+            _customerInMemory.CountId += 1;
+            _customerInMemory.Customers.Add(new Customer{ Id = _customerInMemory.CountId, Name = customer.Name});
+            return _customerInMemory.CountId;
         }
 
         public bool Update(int id, ICustomer customer)
         {
             //Open your connection using Context folder or consume external services using External folder and execute your actions.
-            ICustomer currentCustomer = _customerInMemory?.customers?.Find(x => x.Id == id) ?? new Customer();
+            ICustomer currentCustomer = _customerInMemory?.Customers?.Find(x => x.Id == id) ?? new Customer();
 
             if(currentCustomer.Id == default)
                 return false;
@@ -52,12 +52,12 @@ namespace Customers.Microservice.Infrastructure.Repositories
         public bool Delete(int id)
         {
             //Open your connection using Context folder or consume external services using External folder and execute your actions.
-            ICustomer currentCustomer = _customerInMemory?.customers?.Find(x => x.Id == id) ?? new Customer();
+            ICustomer currentCustomer = _customerInMemory?.Customers?.Find(x => x.Id == id) ?? new Customer();
 
             if(currentCustomer.Id == default)
                 return false;
 
-            _customerInMemory?.customers?.RemoveAt(id);
+            _customerInMemory?.Customers?.RemoveAll(x => x.Id == id);
             return true;
         }
     }

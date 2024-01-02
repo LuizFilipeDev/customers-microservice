@@ -3,11 +3,12 @@
 namespace Customers.Microservice.Domain{
     public class CustomerInMemory
     {
-        public List<ICustomer> customers = [];
+        public List<ICustomer> Customers { get; set; }
+        public int CountId { get; set; }
 
         public CustomerInMemory(){
 
-            customers = new()
+            Customers = new()
             {
                 new Customer { Id = 1, Name = "Jorge" },
                 new Customer { Id = 2, Name = "Alberto" },
@@ -15,6 +16,8 @@ namespace Customers.Microservice.Domain{
                 new Customer { Id = 4, Name = "Paulo" },
                 new Customer { Id = 5, Name = "Mateus" }
             };
+
+            CountId = 5;
         }
     }
 }
