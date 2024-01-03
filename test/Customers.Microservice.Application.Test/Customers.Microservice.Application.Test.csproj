@@ -5,9 +5,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="xunit" Version="2.6.2" />
+    <ProjectReference Include="..\..\src\Customers.Microservice.Domain\Customers.Microservice.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Customers.Microservice.Application\Customers.Microservice.Application.csproj" />
   </ItemGroup>
 
 </Project>
