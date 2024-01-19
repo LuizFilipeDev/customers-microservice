@@ -106,7 +106,7 @@ namespace Customers.Microservice.Application.Extensions
         public static IResult MapGetAllCustomers([FromServices] IServiceProvider serviceProvider){
 
             ICustomerService? customerService = serviceProvider.GetService<ICustomerService>();
-            return TypedResults.Ok(customerService?.Select());
+            return Results.Ok<List<ICustomer>>(customerService?.Select());
         }
 
         [SwaggerOperation(
@@ -120,7 +120,7 @@ namespace Customers.Microservice.Application.Extensions
         public static IResult MapPostCustomer([FromBody] Customer customer, [FromServices] IServiceProvider serviceProvider){
 
             ICustomerService? customerService = serviceProvider.GetService<ICustomerService>();
-            return TypedResults.Created(customerService?.Insert(customer).ToString());
+            return Results.Created("/customer", customerService?.Insert(customer).ToString());
         }
 
         [SwaggerOperation(
