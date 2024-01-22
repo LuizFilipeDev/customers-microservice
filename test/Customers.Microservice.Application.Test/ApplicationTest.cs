@@ -71,6 +71,25 @@ namespace Customers.Microservice.Application.Test
                 Assert.NotNull(result);
                 Assert.Equal(StatusCodes.Status401Unauthorized, result.StatusCode);
             }
+
+            [Fact]
+            public void GivenAnUnauthorizedUserWhenTryToRequestThenReturnUnauthorized()
+            {   
+                //Arrange
+                _mockContext.Setup(x => x.User).Returns(new ClaimsPrincipal(  
+                new ClaimsIdentity(
+                    new[] { new Claim(ClaimTypes.Name, string.Empty) },
+                    BearerTokenDefaults.AuthenticationScheme
+                ) ));
+
+                //Act
+                string name = _mockContext.Object.User.Claims
+                    .Where(x => x.Type == ClaimTypes.Name)
+                    .SingleOrDefault()?.Value ?? string.Empty;
+
+                //Assert
+                Assert.Equal(string.Empty, name);
+            }
         }
 
         public class MapGetCustomerById{
@@ -125,25 +144,6 @@ namespace Customers.Microservice.Application.Test
                 Assert.NotNull(result);
                 Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
             }
-
-            [Fact]
-            public void GivenAnUnauthorizedUserWhenTryToGetAnCustomerByIdThenReturnUnauthorized()
-            {   
-                //Arrange
-                _mockContext.Setup(x => x.User).Returns(new ClaimsPrincipal(  
-                new ClaimsIdentity(
-                    new[] { new Claim(ClaimTypes.Name, string.Empty) },
-                    BearerTokenDefaults.AuthenticationScheme
-                ) ));
-
-                //Act
-                string name = _mockContext.Object.User.Claims
-                    .Where(x => x.Type == ClaimTypes.Name)
-                    .SingleOrDefault()?.Value ?? string.Empty;
-
-                //Assert
-                Assert.Equal(string.Empty, name);
-            }
         }
     
         public class MapGetAllCustomers{
@@ -178,25 +178,6 @@ namespace Customers.Microservice.Application.Test
                 Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
                 Assert.Equal(2, result?.Value?.Count);
             }
-
-            [Fact]
-            public void GivenAnUnauthorizedUserWhenTryToGetAllCustomersThenReturnUnauthorized()
-            {   
-                //Arrange
-                _mockContext.Setup(x => x.User).Returns(new ClaimsPrincipal(  
-                new ClaimsIdentity(
-                    new[] { new Claim(ClaimTypes.Name, string.Empty) },
-                    BearerTokenDefaults.AuthenticationScheme
-                ) ));
-
-                //Act
-                string name = _mockContext.Object.User.Claims
-                    .Where(x => x.Type == ClaimTypes.Name)
-                    .SingleOrDefault()?.Value ?? string.Empty;
-
-                //Assert
-                Assert.Equal(string.Empty, name);
-            }
         }
 
         public class MapPostCustomer{
@@ -228,25 +209,166 @@ namespace Customers.Microservice.Application.Test
                 Assert.Equal(expectedIdentifier.ToString(), result?.Value);
             }
 
-            [Fact]
-            public void GivenAnUnauthorizedUserWhenTryToPostCustomerThenReturnUnauthorized()
+        }
+    
+        public class MapPutCustomerById{
+
+            [Theory]
+            [InlineData(5)]
+            public void GivenAnAuthorizedUserAndValidCustomerWhenTryToPutAnCustomerByIdThenReturnSuccess(int id)
             {   
                 //Arrange
-                _mockContext.Setup(x => x.User).Returns(new ClaimsPrincipal(  
-                new ClaimsIdentity(
-                    new[] { new Claim(ClaimTypes.Name, string.Empty) },
-                    BearerTokenDefaults.AuthenticationScheme
-                ) ));
+                Mock<Customer> mockCustomer = new Mock<Customer>();
+                mockCustomer.Object.Name = "test";
+
+                var mockCustomerService = new Mock<ICustomerService>();
+                mockCustomerService
+                    .Setup(x => x.Update(id, mockCustomer.Object))
+                    .Returns((int id, ICustomer customer) => true);
+                    
+                var mockServiceProvider = new Mock<IServiceProvider>(); 
+                mockServiceProvider 
+                    .Setup(x => x.GetService(typeof(ICustomerService)))
+                    .Returns(mockCustomerService.Object);
 
                 //Act
-                string name = _mockContext.Object.User.Claims
-                    .Where(x => x.Type == ClaimTypes.Name)
-                    .SingleOrDefault()?.Value ?? string.Empty;
+                var result =  (Ok) Extensions.EndpointsExtensions.MapPutCustomerById(id, mockCustomer.Object, mockServiceProvider.Object);
 
                 //Assert
-                Assert.Equal(string.Empty, name);
+                Assert.NotNull(result);
+                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
             }
 
+            [Theory]
+            [InlineData(10)]
+            public void GivenAnAuthorizedUserAndValidCustomerWhenTryToPutAnCustomerByIdThenReturnNotFound(int id)
+            {   
+                //Arrange
+                Mock<Customer> mockCustomer = new Mock<Customer>();
+                mockCustomer.Object.Name = "test";
+
+                var mockCustomerService = new Mock<ICustomerService>();
+                mockCustomerService
+                    .Setup(x => x.Update(id, mockCustomer.Object))
+                    .Returns((int id, ICustomer customer) => false);
+                    
+                var mockServiceProvider = new Mock<IServiceProvider>(); 
+                mockServiceProvider 
+                    .Setup(x => x.GetService(typeof(ICustomerService)))
+                    .Returns(mockCustomerService.Object);
+
+                //Act
+                var result =  (NotFound) Extensions.EndpointsExtensions.MapPutCustomerById(id, mockCustomer.Object, mockServiceProvider.Object);
+
+                //Assert
+                Assert.NotNull(result);
+                Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            }
+
+        }
+
+        public class MapPatchCustomerById{
+
+            [Theory]
+            [InlineData(5)]
+            public void GivenAnAuthorizedUserAndValidCustomerWhenTryToPatchAnCustomerByIdThenReturnSuccess(int id)
+            {   
+                //Arrange
+                Mock<Customer> mockCustomer = new Mock<Customer>();
+                mockCustomer.Object.Name = "test";
+
+                var mockCustomerService = new Mock<ICustomerService>();
+                mockCustomerService
+                    .Setup(x => x.Update(id, mockCustomer.Object))
+                    .Returns((int id, ICustomer customer) => true);
+                    
+                var mockServiceProvider = new Mock<IServiceProvider>(); 
+                mockServiceProvider 
+                    .Setup(x => x.GetService(typeof(ICustomerService)))
+                    .Returns(mockCustomerService.Object);
+
+                //Act
+                var result =  (Ok) Extensions.EndpointsExtensions.MapPatchCustomerById(id, mockCustomer.Object, mockServiceProvider.Object);
+
+                //Assert
+                Assert.NotNull(result);
+                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            }
+
+            [Theory]
+            [InlineData(10)]
+            public void GivenAnAuthorizedUserAndValidCustomerWhenTryToPatchAnCustomerByIdThenReturnNotFound(int id)
+            {   
+                //Arrange
+                Mock<Customer> mockCustomer = new Mock<Customer>();
+                mockCustomer.Object.Name = "test";
+
+                var mockCustomerService = new Mock<ICustomerService>();
+                mockCustomerService
+                    .Setup(x => x.Update(id, mockCustomer.Object))
+                    .Returns((int id, ICustomer customer) => false);
+                    
+                var mockServiceProvider = new Mock<IServiceProvider>(); 
+                mockServiceProvider 
+                    .Setup(x => x.GetService(typeof(ICustomerService)))
+                    .Returns(mockCustomerService.Object);
+
+                //Act
+                var result =  (NotFound) Extensions.EndpointsExtensions.MapPatchCustomerById(id, mockCustomer.Object, mockServiceProvider.Object);
+
+                //Assert
+                Assert.NotNull(result);
+                Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            }
+        }
+
+        public class MapDeleteCustomerById{
+
+            [Theory]
+            [InlineData(5)]
+            public void GivenAnAuthorizedUserAndValidCustomerWhenTryToDeleteAnCustomerByIdThenReturnSuccess(int id)
+            {   
+                //Arrange
+                var mockCustomerService = new Mock<ICustomerService>();
+                mockCustomerService
+                    .Setup(x => x.Delete(id))
+                    .Returns((int id) => true);
+                    
+                var mockServiceProvider = new Mock<IServiceProvider>(); 
+                mockServiceProvider 
+                    .Setup(x => x.GetService(typeof(ICustomerService)))
+                    .Returns(mockCustomerService.Object);
+
+                //Act
+                var result =  (Ok) Extensions.EndpointsExtensions.MapDeleteCustomerById(id, mockServiceProvider.Object);
+
+                //Assert
+                Assert.NotNull(result);
+                Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            }
+
+            [Theory]
+            [InlineData(10)]
+            public void GivenAnAuthorizedUserAndValidCustomerWhenTryToDeleteAnCustomerByIdThenReturnNotFound(int id)
+            {   
+                //Arrange
+                var mockCustomerService = new Mock<ICustomerService>();
+                mockCustomerService
+                    .Setup(x => x.Delete(id))
+                    .Returns((int id) => false);
+                    
+                var mockServiceProvider = new Mock<IServiceProvider>(); 
+                mockServiceProvider 
+                    .Setup(x => x.GetService(typeof(ICustomerService)))
+                    .Returns(mockCustomerService.Object);
+
+                //Act
+                var result =  (NotFound) Extensions.EndpointsExtensions.MapDeleteCustomerById(id, mockServiceProvider.Object);
+
+                //Assert
+                Assert.NotNull(result);
+                Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+            }
         }
     }
 }
