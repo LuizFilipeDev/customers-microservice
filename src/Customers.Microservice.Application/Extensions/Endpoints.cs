@@ -42,9 +42,10 @@ namespace Customers.Microservice.Application.Extensions
                 .RequireRateLimiting(Constant.RequestLimiter.policy)
                 .WithOpenApi();
 
-            endpointRouteBuilder.MapDelete("/customer/{id}", MapDeleteCustomerById).RequireAuthorization()
-            .RequireRateLimiting(Constant.RequestLimiter.policy)
-            .WithOpenApi();
+            endpointRouteBuilder.MapDelete("/customer/{id}", MapDeleteCustomerById)
+                .RequireAuthorization()
+                .RequireRateLimiting(Constant.RequestLimiter.policy)
+                .WithOpenApi();
         }
 
         [SwaggerOperation(
