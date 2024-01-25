@@ -1,14 +1,9 @@
-﻿using System.Net;
-using System.Security.Claims;
-using Amazon.SSO.Model;
+﻿using System.Security.Claims;
 using Customers.Microservice.Domain.Aggregates.Customer;
 using Customers.Microservice.Domain.Aggregates.User;
-using Customers.Microservice.Domain.SeedWork;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
