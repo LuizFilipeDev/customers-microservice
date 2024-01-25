@@ -1,21 +1,31 @@
-﻿using Xunit;
+﻿using Customers.Microservice.Domain.Aggregates.Customer;
+using Moq;
+using Xunit;
 
 namespace Customers.Microservice.Domain.Test
 {
     public class DomainTest
     {
-        [Fact]
-        public void TestName()
-        {
-            // Given
-        
-            // When
-        
-            // Then
+        public class CustomerTest{
 
-            int x = 0 + 0;
+            private readonly Mock<CustomerInMemory> _mockCustomerInMemory = new();
 
-            Assert.Equal(0, x);
+            [Fact]
+            public void GivenANeedOfSelectAllCustomersWhenTryToSelectAllCustomersThenReturnAListOfCustomers()
+            {   
+                //Arrange
+                var mockCustomerService = new Mock<ICustomerService>();
+                mockCustomerService
+                    .Setup(x => x.Select())
+                    .Returns(() => _mockCustomerInMemory.Object.Customers);
+
+                //Act
+                List<ICustomer> result = mockCustomerService.Object.Select();
+                
+                //Assert
+                Assert.NotNull(result);
+                Assert.True(result.Count > default(int));
+            }
         }
     }
 }
