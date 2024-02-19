@@ -21,9 +21,7 @@ namespace Customers.Microservice.Infrastructure.Repositories
             foreach (KeyValuePair<string, string> keyValuePair in dictionary)
             {
                 if(keyValuePair.Key == name && keyValuePair.Value == password)
-                {
                     return true;
-                }
             }
 
             return false;

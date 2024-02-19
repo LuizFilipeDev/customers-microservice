@@ -19,7 +19,9 @@ namespace Customers.Microservice.Domain.Aggregates.User
 
             //Domain rules/logic
 
-            return await _userRepository.SelectByNameAndPasswordAsync(user.Name ?? string.Empty, user.Password ?? string.Empty);
+            //Commented the line below to don't use the AWS Secret Manager for now. But it works!
+            //return await _userRepository.SelectByNameAndPasswordAsync(user.Name ?? string.Empty, user.Password ?? string.Empty);
+            return await Task.FromResult(true);
         }
     }
 }
