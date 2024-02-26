@@ -6,26 +6,23 @@ using Newtonsoft.Json;
 
 namespace Customers.Microservice.Infrastructure.External
 {
-    public static class AWS
+    public class AWS: IAWS
     {
-        public static class SecretManager
+        public async Task<Dictionary<string, string>> GetSecretsFromSecretManager(string? secret = null, string? region = null)
         {
-            public static async Task<Dictionary<string, string>> GetSecret(string? secret = null, string? region = null)
+            GetSecretValueResponse response;
+
+            try
             {
-                GetSecretValueResponse response;
-
-                try
-                {
-                    response = await new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(region ?? Constant.AWS.SecretManager.region))
-                                  .GetSecretValueAsync(new GetSecretValueRequest { SecretId = secret ?? Constant.AWS.SecretManager.secretName });
-                }
-                catch (Exception e)
-                {
-                    throw;
-                }
-
-                return JsonConvert.DeserializeObject<Dictionary<string, string>>(response.SecretString) ?? [];
+                response = await new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(region ?? Constant.AWS.SecretManager.region))
+                              .GetSecretValueAsync(new GetSecretValueRequest { SecretId = secret ?? Constant.AWS.SecretManager.secretName });
             }
+            catch (Exception e)
+            {
+                throw;
+            }
+
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(response.SecretString) ?? [];
         }
     }
 }

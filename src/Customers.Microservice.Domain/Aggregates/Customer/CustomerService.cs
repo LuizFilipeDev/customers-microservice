@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace Customers.Microservice.Domain.Aggregates.Customer
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService(ICustomerRepository customerRepository) : ICustomerService
     {
-        private readonly ICustomerRepository _customerRepository;
-
-        public CustomerService(ICustomerRepository customerRepository)
-        {
-            _customerRepository = customerRepository;
-        }
+        private readonly ICustomerRepository _customerRepository = customerRepository;
 
         public List<ICustomer> Select()
         {

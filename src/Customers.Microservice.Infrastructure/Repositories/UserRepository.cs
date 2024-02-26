@@ -10,12 +10,14 @@ using System.Xml.Linq;
 
 namespace Customers.Microservice.Infrastructure.Repositories
 {
-    public class UserRepository: IUserRepository
+    public class UserRepository(IAWS AWS) : IUserRepository
     {
+        private readonly IAWS _AWS = AWS;
+        
         public async Task<bool> SelectByNameAndPasswordAsync(string? name, string? password)
         {
             //Open your connection using Context folder or consume external services using External folder and execute your actions.
-            Dictionary<string, string> dictionary = await AWS.SecretManager.GetSecret();
+            Dictionary<string, string> dictionary = await _AWS.GetSecretsFromSecretManager();
 
             //Example of rule to API login works
             foreach (KeyValuePair<string, string> keyValuePair in dictionary)

@@ -3,14 +3,10 @@ using Customers.Microservice.Domain.Aggregates.Customer;
 
 namespace Customers.Microservice.Infrastructure.Repositories
 {
-    public class CustomerRepository : ICustomerRepository
+    public class CustomerRepository(CustomerInMemory customerInMemory) : ICustomerRepository
     {
-        private readonly CustomerInMemory _customerInMemory;
+        private readonly CustomerInMemory _customerInMemory = customerInMemory;
 
-        public CustomerRepository(CustomerInMemory customerInMemory){
-            _customerInMemory = customerInMemory;
-        }
-        
         public List<ICustomer> Select()
         {
             //Open your connection using Context folder or consume external services using External folder and execute your actions.
