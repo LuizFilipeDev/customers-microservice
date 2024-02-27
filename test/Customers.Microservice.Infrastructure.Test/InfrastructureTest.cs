@@ -22,8 +22,8 @@ namespace Customers.Microservice.Infrastructure.Test
                     };
                     var mockAWS = new Mock<IAWS>();
                     mockAWS
-                        .Setup(x => x.GetSecretsFromSecretManager("", ""))
-                        .Returns((string name, string password)
+                        .Setup(x => x.GetSecretsFromSecretManager(Constant.AWS.SecretManager.secretName, Constant.AWS.SecretManager.region))
+                        .Returns((string secretName, string region)
                         => Task.FromResult(dictionary));
 
                     //Act

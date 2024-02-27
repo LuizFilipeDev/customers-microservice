@@ -2,6 +2,7 @@
 using Customers.Microservice.Domain.Aggregates.Customer;
 using Customers.Microservice.Domain.Aggregates.User;
 using Customers.Microservice.Domain.SeedWork;
+using Customers.Microservice.Infrastructure.External;
 using Customers.Microservice.Infrastructure.Repositories;
 using Microsoft.OpenApi.Models;
 using System.Threading.RateLimiting;
@@ -16,6 +17,7 @@ namespace Customers.Microservice.Application.Extensions
             serviceCollection.AddScoped<ICustomerRepository, CustomerRepository>();
             serviceCollection.AddScoped<IUserService, UserService>();
             serviceCollection.AddScoped<IUserRepository, UserRepository>();
+            serviceCollection.AddScoped<IAWS, AWS>();
             serviceCollection.AddSingleton<CustomerInMemory>();
         }
 
