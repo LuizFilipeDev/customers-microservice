@@ -12,7 +12,7 @@ namespace Customers.Microservice.Infrastructure.Test
             public class AWSTest
             {
                 [Theory]
-                [InlineData("", "")]
+                [InlineData("user.admin.test", "password.admin.test")]
                 public async void GivenANeedOfSelectAllSecretsFromSecretManagerWhenTryToSelectAllSecretsThenReturnSecrets(string key, string value)
                 {
                     //Arrange
@@ -22,13 +22,13 @@ namespace Customers.Microservice.Infrastructure.Test
                     };
                     var mockAWS = new Mock<IAWS>();
                     mockAWS
-                        .Setup(x => x.GetSecretsFromSecretManager(Constant.AWS.SecretManager.secretName, Constant.AWS.SecretManager.region))
+                        .Setup(x => x.GetSecretsFromSecretManager("customer.api.test", "sa-east-1-test"))
                         .Returns((string secretName, string region)
                         => Task.FromResult(dictionary));
 
                     //Act
                     Dictionary<string, string> result = await mockAWS.Object.
-                        GetSecretsFromSecretManager(Constant.AWS.SecretManager.secretName, Constant.AWS.SecretManager.region);
+                        GetSecretsFromSecretManager("customer.api.test", "sa-east-1-test");
 
                     //Assert
                     Assert.NotNull(result);
