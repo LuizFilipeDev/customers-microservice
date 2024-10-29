@@ -1,6 +1,6 @@
 # Customers Microservice
 
-Application developed thinking about the ecosystem of a microservice using DDD (Domain Driven Design), DI (Dependency Injection) native ASP.NET Core, Repository Pattern, decoupling of services and API configurations using extension classes, unit tests, native .NET logging and integration with AWS Secret Manager for managing users with access to the microservice, all containerized using Docker.
+Application developed thinking about the ecosystem of a microservice using DDD (Domain Driven Design), DI (Dependency Injection) native ASP.NET Core 8, Repository Pattern, decoupling of services and API configurations using extension classes, unit tests, native .NET logging and integration with AWS Secret Manager for managing users with access to the microservice, all containerized using Docker.
 
 ## Interface
 
